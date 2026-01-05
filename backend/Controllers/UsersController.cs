@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
 using backend.Data;
 using backend.DTOs;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using BCrypt.Net;
+
 
 namespace backend.Controllers
 {
@@ -21,11 +21,18 @@ namespace backend.Controllers
         [HttpPost]
         public IActionResult Create(CreateUserDTO userDTO)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
+
             User user = new User
             {
                 Name = userDTO.Name,
                 Email = userDTO.Email,
-                PasswordHash = userDTO.Password,
+                PasswordHash = passwordHash,
                 CreationDate = DateTime.Now,
                 Status = "Ativo"
             };
@@ -43,7 +50,11 @@ namespace backend.Controllers
                 Status = user.Status
             };
 
-            return Created($"/users/{user.Id}", response);
+            return CreatedAtAction(
+                nameof(GetId),
+                new { id = user.Id},
+                response
+            );
 
         }
 

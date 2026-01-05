@@ -36,3 +36,4 @@ C:\Users\Luan\Desktop\system_c-_CRUD\backend\bin\Debug\net9.0\Microsoft.EntityFr
 C:\Users\Luan\Desktop\system_c-_CRUD\backend\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\Luan\Desktop\system_c-_CRUD\backend\bin\Debug\net9.0\MySqlConnector.dll
 C:\Users\Luan\Desktop\system_c-_CRUD\backend\bin\Debug\net9.0\Pomelo.EntityFrameworkCore.MySql.dll
+C:\Users\Luan\Desktop\system_c-_CRUD\backend\bin\Debug\net9.0\BCrypt.Net-Next.dll
