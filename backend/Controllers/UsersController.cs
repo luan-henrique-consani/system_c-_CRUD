@@ -3,6 +3,8 @@ using backend.DTOs;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using BCrypt.Net;
+using System.IO.Compression;
+using System.Numerics;
 
 
 namespace backend.Controllers
@@ -59,10 +61,19 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int page = 1,int pageSize = 10)
         {
+            if(page <= 0) page = 1;
+            if(pageSize <= 0 || pageSize > 50 ) pageSize = 10;
+
+            var totalUsers = _context.Users.Count();
+
             var userList =
-            _context.Users.Select(u => new UserResponseDTO
+            _context.Users
+            .OrderBy(u => u.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(u => new UserResponseDTO
             {
                 Id = u.Id,
                 Name = u.Name,
@@ -71,7 +82,16 @@ namespace backend.Controllers
                 Status = u.Status
             }).ToList();
 
-            return Ok(userList);
+            return Ok(new
+            {
+                page,
+                pageSize,
+                totalUsers,
+                totalPages = (int)Math.Ceiling(totalUsers / (double)pageSize),
+                data = userList
+
+            });
+
         }
 
         [HttpGet("{id}")]
